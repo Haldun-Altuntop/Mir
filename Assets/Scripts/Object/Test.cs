@@ -14,10 +14,15 @@ namespace Mir.Object
         // Update is called once per frame
         void Update()
         {
-            if (InputManager.Instance.IsBackPressed)
+            if (GameInputManager.Instance.IsBackPressed)
             {
                 Debug.Log("Geri tuþuna basýldý.");
             }
-    }
+
+            if (GameInputManager.Instance.IsJumpPressed)
+            {
+                Debug.Log("Zýplama tuþuna basýldý.");
+            }
+        }
     }
 }
