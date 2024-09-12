@@ -65,6 +65,15 @@ namespace Mir.Input
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Movement"",
+                    ""type"": ""Value"",
+                    ""id"": ""1f16e651-8725-4230-ba05-1adce60cc9b0"",
+                    ""expectedControlType"": ""Vector3"",
+                    ""processors"": ""NormalizeVector3"",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -78,6 +87,83 @@ namespace Mir.Input
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""3D Vector"",
+                    ""id"": ""b8def304-daa5-4df6-bba4-506f65e30797"",
+                    ""path"": ""3DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Up"",
+                    ""id"": ""3ce8538a-3ef4-4b68-bdf1-fd5958d2df80"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Down"",
+                    ""id"": ""7244d99e-f3b9-4266-8b23-5b062dd9c0f2"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Left"",
+                    ""id"": ""07da8c9a-c088-454d-9382-e7f358d55e21"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Right"",
+                    ""id"": ""9bc8f1ed-a02b-412f-a341-8b0eefa8f822"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Forward"",
+                    ""id"": ""bbd5785e-448b-4ed3-971a-64771602c6c7"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Backward"",
+                    ""id"": ""063c6272-c565-400b-b858-523f3b5e9142"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -90,6 +176,7 @@ namespace Mir.Input
             // PlayerActions
             m_PlayerActions = asset.FindActionMap("PlayerActions", throwIfNotFound: true);
             m_PlayerActions_Jump = m_PlayerActions.FindAction("Jump", throwIfNotFound: true);
+            m_PlayerActions_Movement = m_PlayerActions.FindAction("Movement", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -198,11 +285,13 @@ namespace Mir.Input
         private readonly InputActionMap m_PlayerActions;
         private List<IPlayerActionsActions> m_PlayerActionsActionsCallbackInterfaces = new List<IPlayerActionsActions>();
         private readonly InputAction m_PlayerActions_Jump;
+        private readonly InputAction m_PlayerActions_Movement;
         public struct PlayerActionsActions
         {
             private @Game m_Wrapper;
             public PlayerActionsActions(@Game wrapper) { m_Wrapper = wrapper; }
             public InputAction @Jump => m_Wrapper.m_PlayerActions_Jump;
+            public InputAction @Movement => m_Wrapper.m_PlayerActions_Movement;
             public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -215,6 +304,9 @@ namespace Mir.Input
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @Movement.started += instance.OnMovement;
+                @Movement.performed += instance.OnMovement;
+                @Movement.canceled += instance.OnMovement;
             }
 
             private void UnregisterCallbacks(IPlayerActionsActions instance)
@@ -222,6 +314,9 @@ namespace Mir.Input
                 @Jump.started -= instance.OnJump;
                 @Jump.performed -= instance.OnJump;
                 @Jump.canceled -= instance.OnJump;
+                @Movement.started -= instance.OnMovement;
+                @Movement.performed -= instance.OnMovement;
+                @Movement.canceled -= instance.OnMovement;
             }
 
             public void RemoveCallbacks(IPlayerActionsActions instance)
@@ -246,6 +341,7 @@ namespace Mir.Input
         public interface IPlayerActionsActions
         {
             void OnJump(InputAction.CallbackContext context);
+            void OnMovement(InputAction.CallbackContext context);
         }
     }
 }

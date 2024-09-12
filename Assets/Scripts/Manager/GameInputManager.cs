@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Mir.Input;
+using System;
 
 namespace Mir.Managers
 {
@@ -13,6 +14,7 @@ namespace Mir.Managers
         private bool isBackPressed;
 
         private bool isJumpPressed;
+        private Vector3 movement;
 
         private void Awake()
         {
@@ -27,6 +29,9 @@ namespace Mir.Managers
             gameInput.GameActions.Back.started += HandleBackPressed;
 
             gameInput.PlayerActions.Jump.started += HandleJumpPressed;
+
+            gameInput.PlayerActions.Movement.performed += HandleMovement;
+            //gameInput.PlayerActions.Movement.canceled += SetMovementToZero;
         }
 
         private void HandleBackPressed(InputAction.CallbackContext context)
@@ -37,6 +42,16 @@ namespace Mir.Managers
         private void HandleJumpPressed(InputAction.CallbackContext context)
         {
             isJumpPressed = context.ReadValueAsButton();
+        }
+
+        private void HandleMovement(InputAction.CallbackContext context)
+        {
+            movement = context.ReadValue<Vector3>();
+        }
+
+        private void SetMovementToZero(InputAction.CallbackContext context)
+        {
+            movement = Vector3.zero;
         }
 
         public void DisablePlayerInput()
@@ -78,6 +93,14 @@ namespace Mir.Managers
                 bool tmp = isJumpPressed;
                 isJumpPressed = false;
                 return tmp;
+            }
+        }
+
+        public Vector3 Movement
+        {
+            get
+            {
+                return movement;
             }
         }
     }

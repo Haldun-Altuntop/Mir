@@ -1,4 +1,5 @@
 using Mir.Animation;
+using Mir.Entity.Player.State;
 using UnityEngine;
 
 namespace Mir
@@ -11,7 +12,7 @@ namespace Mir
 
         void Start()
         {
-        
+            mainState = new IdleState();
         }
 
         public void SetState(State newState)
@@ -30,15 +31,20 @@ namespace Mir
             }
         }
 
-        private void SetNextStateToMain()
+        public void SetNextStateToMain()
         {
             nextState = mainState;
+        }
+
+        public void SetMainState(State state)
+        {
+            mainState = state;  
         }
 
         void Update()
         {
             if (nextState != null) 
-                SetNextState(nextState);
+                SetState(nextState);
 
             if (currentState != null) 
                 currentState.OnUpdate();
